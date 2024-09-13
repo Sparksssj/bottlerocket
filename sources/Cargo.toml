@@ -61,7 +61,7 @@ members = [
     "settings-plugins/vmware-dev",
     "settings-plugins/vmware-k8s",
 
-    "constants",
+    "constants", "settings-migrations/v1.22.0/kubernetes-service-config",
 ]
 
 [workspace.dependencies]

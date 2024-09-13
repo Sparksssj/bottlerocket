@@ -343,4 +343,5 @@ version = "1.22.0"
     "migrate_v1.22.0_public-control-container-v0-7-15.lz4",
     "migrate_v1.22.0_bootstrap-commands-settings.lz4",
     "migrate_v1.22.0_bootstrap-commands-metadata.lz4",
+    "migrate_v1.22.0_kubernetes-service-config.lz4",
 ]
