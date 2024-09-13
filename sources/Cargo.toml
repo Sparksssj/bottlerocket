@@ -51,6 +51,7 @@ members = [
     "settings-migrations/v1.22.0/public-control-container-v0-7-15",
     "settings-migrations/v1.22.0/bootstrap-commands-settings",
     "settings-migrations/v1.22.0/bootstrap-commands-metadata",
+    "settings-migrations/v1.23.0/kubernetes-service-config",
 
     "settings-plugins/aws-dev",
     "settings-plugins/aws-ecs-1",
