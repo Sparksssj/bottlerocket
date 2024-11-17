@@ -1032,6 +1032,7 @@ dependencies = [
  "percent-encoding",
  "serde",
  "serde_json",
+ "serde_plain",
  "snafu",
  "toml",
  "walkdir",
