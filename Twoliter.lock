@@ -2,21 +2,21 @@ schema-version = 1
 
 [sdk]
 name = "bottlerocket-sdk"
-version = "0.50.0"
+version = "0.50.1"
 vendor = "bottlerocket"
-source = "public.ecr.aws/bottlerocket/bottlerocket-sdk:v0.50.0"
-digest = "Rjpy/gVgBhU/B696xaK1Y4/drz4pNJu+fyyZSIk9oLE="
+source = "public.ecr.aws/bottlerocket/bottlerocket-sdk:v0.50.1"
+digest = "HEh3Lx3F6P4OEPnFubF++RMpMW2vlfp/Tc/tGjnBRcM="
 
 [[kit]]
 name = "bottlerocket-kernel-kit"
-version = "1.0.4"
+version = "1.0.6"
 vendor = "bottlerocket"
-source = "public.ecr.aws/bottlerocket/bottlerocket-kernel-kit:v1.0.4"
-digest = "3ublvpZTqoQDiT7HZNl4v3K1cIVGLsSsyym/eBVgOBk="
+source = "public.ecr.aws/bottlerocket/bottlerocket-kernel-kit:v1.0.6"
+digest = "xnixe91yqOdD0iDPSwa0fKnAaCDzU6nwzw1XL+3pbyI="
 
 [[kit]]
 name = "bottlerocket-core-kit"
-version = "5.4.1"
+version = "5.4.2"
 vendor = "bottlerocket"
-source = "public.ecr.aws/bottlerocket/bottlerocket-core-kit:v5.4.1"
-digest = "PKXYvgjqL5anvnaEpDOsPk2QUW09qtyZld+KRk1Y1UQ="
+source = "public.ecr.aws/bottlerocket/bottlerocket-core-kit:v5.4.2"
+digest = "08DMHssgSYSdDW2RPw8Oxy+8/jsNA76sCRW0kJG8XNE="
