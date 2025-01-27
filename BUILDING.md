@@ -203,7 +203,7 @@ The specifics of building an out-of-tree module will vary by project, but the fi
 ### Downloading the kmod kit
 
 kmod kits are included in the official Bottlerocket repos starting with Bottlerocket v1.0.6.
-Let's say you want to download the kit for building x86_64 modules for v1.11.0 and variant aws-k8s-1.24.
+Let's say you want to download the kit for building x86_64 modules for v1.31.0 and variant aws-k8s-1.32.
 
 First, you need tuftool:
 ```shell
@@ -220,8 +220,8 @@ sha512sum -c <<<"2ff1fbf99b20dd7ff5d2c84243a8e3b51701183b1f524b7d470a6b7a9b0172f
 Next, set your desired parameters, and download the kmod kit:
 ```shell
 ARCH=x86_64
-VERSION=v1.11.0
-VARIANT=aws-k8s-1.24
+VERSION=v1.31.0
+VARIANT=aws-k8s-1.32
 OUTDIR="${VARIANT}-${VERSION}"
 
 tuftool download "${OUTDIR}" --target-name ${VARIANT}-${ARCH}-kmod-kit-${VERSION}.tar.xz \

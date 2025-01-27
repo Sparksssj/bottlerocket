@@ -57,11 +57,10 @@ We’re excited to get early feedback and to continue working on more use cases!
 Bottlerocket is architected such that different cloud environments and container orchestrators can be supported in the future.
 A build of Bottlerocket that supports different features or integration characteristics is known as a 'variant'.
 The artifacts of a build will include the architecture and variant name.
-For example, an `x86_64` build of the `aws-k8s-1.24` variant will produce an image named `bottlerocket-aws-k8s-1.24-x86_64-<version>-<commit>.img`.
+For example, an `x86_64` build of the `aws-k8s-1.32` variant will produce an image named `bottlerocket-aws-k8s-1.32-x86_64-<version>-<commit>.img`.
 
 The following variants support EKS, as described above:
 
-* `aws-k8s-1.24`
 * `aws-k8s-1.25`
 * `aws-k8s-1.26`
 * `aws-k8s-1.27`
@@ -70,7 +69,6 @@ The following variants support EKS, as described above:
 * `aws-k8s-1.30`
 * `aws-k8s-1.31`
 * `aws-k8s-1.32`
-* `aws-k8s-1.24-nvidia`
 * `aws-k8s-1.25-nvidia`
 * `aws-k8s-1.26-nvidia`
 * `aws-k8s-1.27-nvidia`
@@ -97,7 +95,7 @@ We also have variants that are designed to be Kubernetes worker nodes in VMware:
 
 The following variants are no longer supported:
 
-* All Kubernetes variants using Kubernetes 1.23 and earlier
+* All Kubernetes variants using Kubernetes 1.24 and earlier
 * VMware variants using Kubernetes 1.27 and earlier
 * Bare metal variants for Kubernetes
 
