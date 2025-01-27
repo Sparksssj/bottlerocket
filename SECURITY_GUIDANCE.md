@@ -246,7 +246,7 @@ If you need to grant unprivileged containers access to all NVIDIA GPUs using thi
 
 
 ```toml
-[settings.kubelet-device-plugin]
+[settings.kubelet-device-plugins.nvidia]
 # Configures NVIDIA_VISIBLE_DEVICES with the list of devices
 device-list-strategy = "envvar"
 

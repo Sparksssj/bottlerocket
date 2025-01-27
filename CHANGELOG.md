@@ -1,3 +1,17 @@
+# v1.32.0 (2025-01-24)
+
+## Build Changes
+* Update bottlerocket-core-kit to 5.4.2 ([#4374])
+* Update bottlerocket-kernel-kit to 1.0.6 ([#4374])
+* Update bottlerocket-sdk to 0.50.1 ([#4374])
+
+### Twoliter
+
+* Update Twoliter to 0.7.1 ([#4373])
+
+[#4373]: https://github.com/bottlerocket-os/bottlerocket/pull/4373
+[#4374]: https://github.com/bottlerocket-os/bottlerocket/pull/4374
+
 # v1.31.0 (2025-01-21)
 
 ## OS Changes
