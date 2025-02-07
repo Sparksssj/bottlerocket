@@ -1,18 +1,15 @@
-use migration_helpers::common_migrations::ReplaceSchnauzerMigration;
+use migration_helpers::common_migrations::ReplaceStringMigration;
 use migration_helpers::{migrate, Result};
 use std::process;
 
-const OLD_CONTROL_CTR_CMDLINE: &str =
-    "schnauzer-v2 render --requires 'aws@v1(helpers=[ecr-prefix])' --template '{{ ecr-prefix settings.aws.region }}/bottlerocket-control:v0.7.19'";
-const NEW_CONTROL_CTR_CMDLINE: &str =
-    "schnauzer-v2 render --requires 'aws@v1(helpers=[ecr-prefix])' --template '{{ ecr-prefix settings.aws.region }}/bottlerocket-control:v0.7.20'";
-
+const OLD_CONTROL_CTR_SOURCE_VAL: &str = "public.ecr.aws/bottlerocket/bottlerocket-control:v0.7.19";
+const NEW_CONTROL_CTR_SOURCE_VAL: &str = "public.ecr.aws/bottlerocket/bottlerocket-control:v0.7.20";
 /// We bumped the version of the default control container
 fn run() -> Result<()> {
-    migrate(ReplaceSchnauzerMigration {
+    migrate(ReplaceStringMigration {
         setting: "settings.host-containers.control.source",
-        old_schnauzer_cmdline: OLD_CONTROL_CTR_CMDLINE,
-        new_schnauzer_cmdline: NEW_CONTROL_CTR_CMDLINE,
+        old_val: OLD_CONTROL_CTR_SOURCE_VAL,
+        new_val: NEW_CONTROL_CTR_SOURCE_VAL,
     })
 }
 
