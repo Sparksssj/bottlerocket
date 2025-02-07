@@ -2204,7 +2204,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "public-control-container-v0-7-19-update"
+version = "0.1.0"
+dependencies = [
+ "migration-helpers",
+]
+
+[[package]]
 name = "public-control-container-v0-7-20"
+version = "0.1.0"
+dependencies = [
+ "migration-helpers",
+]
+
+[[package]]
+name = "public-control-container-v0-7-20-update"
 version = "0.1.0"
 dependencies = [
  "migration-helpers",
