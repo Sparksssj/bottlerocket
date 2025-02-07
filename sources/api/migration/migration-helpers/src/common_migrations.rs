@@ -1,9 +1,10 @@
 use crate::{error, Migration, MigrationData, Result};
 use schnauzer::import::{json_settings::JsonSettingsResolver, StaticHelperResolver};
 use serde::Serialize;
+use serde_json::Value;
 use shlex::Shlex;
 use snafu::{OptionExt, ResultExt};
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 /// We use this migration when we add settings and want to make sure they're removed before we go
 /// back to old versions that don't understand them.
@@ -1909,6 +1910,234 @@ impl Migration for NoOpMigration {
     /// No work to do on backward migrations, copy the same datastore
     fn backward(&mut self, input: MigrationData) -> Result<MigrationData> {
         println!("NoOpMigration has no work to do on downgrade.",);
+        Ok(input)
+    }
+}
+
+// =^..^=   =^..^=   =^..^=   =^..^=   =^..^=   =^..^=   =^..^=   =^..^=   =^..^=
+/// We use this migration to remove the metadata(always) and data if it matches with existing value.
+/// This is done so that, the values can be repopulated from defaults using Storewolf and Sundog.
+/// We will need this migration once to adapt the concept of Strength on settings.
+pub struct RemoveSchnauzerMigration {
+    pub setting: &'static str,
+    pub old_cmdline: &'static str,
+}
+
+impl RemoveSchnauzerMigration {
+    fn update_data_and_metadata(
+        &self,
+        outgoing_setting_data: &str,
+        outgoing_schnauzer_cmdline: &str,
+        input: &mut MigrationData,
+    ) -> Result<()> {
+        // We just need to delete the data if it matches the old setting data in datastore.
+        // Though we are aware that all the metadata will be removed by the migrator/another migration
+        // We will delete the metadata here to keep this migration complete.
+
+        let metadata = input.metadata.entry(self.setting.to_string()).or_default();
+        metadata.remove("setting-generator");
+
+        let input_data = structure_migration_data_for_templates(&input.data)?;
+        let input_data =
+            serde_json::to_value(input_data).context(error::SerializeTemplateDataSnafu)?;
+
+        // Generate settings data using the setting's outgoing template so we can confirm
+        // it matches our expected value; if not, the user has changed it and we should stop.
+        let template_importer = SchnauzerMigrationTemplateImporter::new(input_data);
+        let outgoing_command_args = Shlex::new(outgoing_schnauzer_cmdline);
+
+        let tokio_runtime = tokio::runtime::Builder::new_multi_thread()
+            .enable_all()
+            .build()
+            .context(error::CreateTokioRuntimeSnafu)?;
+
+        let generated_old_data = tokio_runtime
+            .block_on(async {
+                schnauzer::v2::cli::run_with_args(outgoing_command_args, &template_importer).await
+            })
+            .with_context(|_| error::RenderSchnauzerV2TemplateSnafu {
+                cmdline: outgoing_schnauzer_cmdline.to_string(),
+            })?;
+
+        if generated_old_data == *outgoing_setting_data {
+            // Remove the setting from the datastore; a new value will be generated using
+            // Storewolf and Sundog
+            println!(
+                "Existing setting value '{}' for setting '{}' is same as outgoing value. '{}'",
+                generated_old_data, outgoing_setting_data, self.setting
+            );
+
+            println!("Removing setting '{}' from datastore", self.setting);
+
+            input.data.remove(self.setting);
+        } else {
+            println!(
+                "'{}' is not set to '{}', leaving alone",
+                self.setting, generated_old_data
+            );
+        }
+
+        Ok(())
+    }
+}
+
+impl Migration for RemoveSchnauzerMigration {
+    fn forward(&mut self, mut input: MigrationData) -> Result<MigrationData> {
+        if let Some(input_value) = input.data.get(self.setting) {
+            let data = input_value
+                .as_str()
+                .context(error::NonStringSettingDataTypeSnafu {
+                    setting: self.setting,
+                })?;
+
+            self.update_data_and_metadata(
+                // Clone the input string; we need to give the function mutable access to
+                // the structure that contains the string, so we can't pass a reference into the
+                // structure.
+                #[allow(clippy::unnecessary_to_owned)]
+                &data.to_owned(),
+                self.old_cmdline,
+                &mut input,
+            )?;
+        } else {
+            println!("Found no '{}' to change on upgrade", self.setting);
+        }
+
+        Ok(input)
+    }
+
+    fn backward(&mut self, input: MigrationData) -> Result<MigrationData> {
+        println!("RemoveSchnauzerMigration has no work to do on downgrade.",);
+        Ok(input)
+    }
+}
+
+#[cfg(test)]
+mod remove_schnauzer_migration {
+    use std::collections::HashMap;
+
+    use super::RemoveSchnauzerMigration;
+    use crate::{Migration, MigrationData};
+    use maplit::hashmap;
+    use serde_json::json;
+
+    #[test]
+    fn test_replaces_data_and_generator() {
+        // Given a schnauzer migration where the settings generator and generated data are both set
+        // to the input values,
+        // When the RemoveSchnauzerMigration is performed,
+        // Both the generator and data are deleted.
+        let mut migration = RemoveSchnauzerMigration {
+            setting: "settings.output",
+            old_cmdline:
+                "schnauzer-v2 render --requires 'input@v1' --template '{{ settings.input }}'",
+        };
+
+        let input = MigrationData {
+            data: hashmap! {
+                "settings.input".into() => json!("hello"),
+                "settings.output".into() => json!("hello"),
+                "os".into() => json!({}),
+            },
+            metadata: hashmap! {
+                "settings.output".into() => hashmap!{"setting-generator".into() => migration.old_cmdline.into()}
+            },
+        };
+
+        let forward_result = migration.forward(input.clone());
+        println!("{:?}", forward_result);
+        let forward_result = forward_result.unwrap();
+
+        assert_eq!(forward_result.data.get("settings.output"), Option::None);
+
+        assert_eq!(
+            forward_result
+                .metadata
+                .get("settings.output")
+                .unwrap_or(&HashMap::new())
+                .get("setting-generator"),
+            Option::None
+        );
+    }
+}
+
+// =^..^=   =^..^=   =^..^=   =^..^=   =^..^=   =^..^=   =^..^=   =^..^=   =^..^=
+
+/// We use this migration to remove a setting string if it matches the old value.
+/// We will need this migration once to adapt the concept of Strength on settings.
+pub struct RemoveMatchingString {
+    pub setting: &'static str,
+    pub old_val: &'static str,
+}
+
+impl Migration for RemoveMatchingString {
+    fn forward(&mut self, mut input: MigrationData) -> Result<MigrationData> {
+        if let Some(data) = input.data.get_mut(self.setting) {
+            match data {
+                serde_json::Value::String(data) => {
+                    if data == self.old_val {
+                        input.data.remove(self.setting);
+                    } else {
+                        println!(
+                            "'{}' is not set to '{}', leaving alone",
+                            self.setting, self.old_val
+                        );
+                    }
+                }
+                _ => {
+                    println!(
+                        "'{}' is set to non-string value '{}'; RemoveOldData expects a string setting value",
+                        self.setting, data
+                    );
+                }
+            }
+        } else {
+            println!("Found no '{}' to change on upgrade", self.setting);
+        }
+        Ok(input)
+    }
+
+    fn backward(&mut self, input: MigrationData) -> Result<MigrationData> {
+        println!("RemoveOldData has no work to do on downgrade.",);
+        Ok(input)
+    }
+}
+
+// =^..^=   =^..^=   =^..^=   =^..^=   =^..^=   =^..^=   =^..^=   =^..^=   =^..^=
+
+// When we downgrade multiple version to a version where migrator is not aware of deleting the
+// setting-generator as struct or the strength file.
+// This migration will remove the setting-generator as struct and strength metadata.
+// Also We will delete the metadata on downgrade and
+// depend on storewolf to populate the metadata from defaults.
+#[derive(Debug)]
+pub struct RemoveMetadataAndWeakSettingsMigration;
+
+impl Migration for RemoveMetadataAndWeakSettingsMigration {
+    /// No work to do on forward migrations, copy the same datastore
+    fn forward(&mut self, input: MigrationData) -> Result<MigrationData> {
+        println!("RemoveMetadataAndWeakSettingsMigration has no work to do on upgrade.",);
+        Ok(input)
+    }
+
+    /// Delete all the weak settings on backward migrations
+    fn backward(&mut self, mut input: MigrationData) -> Result<MigrationData> {
+        let mut keys_to_remove = HashSet::new();
+        // Collect keys where the inner HashMap contains the key "strength"
+        for (key, inner_map) in &input.metadata {
+            if let Some(strength) = inner_map.get("strength") {
+                if strength == &Value::String("weak".to_string()) {
+                    keys_to_remove.insert(key.clone());
+                }
+            }
+        }
+        // Remove weak settings
+        for key in keys_to_remove {
+            input.data.remove(&key);
+        }
+
+        // Remove all the metadata
+        input.metadata = HashMap::new();
         Ok(input)
     }
 }

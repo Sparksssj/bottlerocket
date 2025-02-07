@@ -12,6 +12,7 @@ exclude = ["README.md"]
 bottlerocket-release.workspace = true
 datastore.workspace = true
 handlebars.workspace = true
+models.workspace = true
 schnauzer.workspace = true
 serde.workspace = true
 serde_json.workspace = true

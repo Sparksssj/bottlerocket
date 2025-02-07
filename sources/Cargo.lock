@@ -437,6 +437,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "aws-remove-schnauzer-admin"
+version = "0.1.0"
+dependencies = [
+ "migration-helpers",
+]
+
+[[package]]
+name = "aws-remove-schnauzer-control"
+version = "0.1.0"
+dependencies = [
+ "migration-helpers",
+]
+
+[[package]]
 name = "backtrace"
 version = "0.3.69"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1032,6 +1046,7 @@ dependencies = [
  "percent-encoding",
  "serde",
  "serde_json",
+ "serde_plain",
  "snafu",
  "toml",
  "walkdir",
@@ -1743,6 +1758,7 @@ dependencies = [
  "datastore",
  "handlebars",
  "maplit",
+ "models",
  "schnauzer",
  "serde",
  "serde_json",
@@ -1800,6 +1816,7 @@ dependencies = [
  "libc",
  "serde",
  "serde_json",
+ "serde_plain",
  "toml",
 ]
 
@@ -2194,6 +2211,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "public-remove-source-admin"
+version = "0.1.0"
+dependencies = [
+ "migration-helpers",
+]
+
+[[package]]
+name = "public-remove-source-control"
+version = "0.1.0"
+dependencies = [
+ "migration-helpers",
+]
+
+[[package]]
 name = "quinn"
 version = "0.11.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2318,6 +2349,13 @@ name = "regex-syntax"
 version = "0.8.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c08c74e62047bb2de4ff487b251e4a92e24f48745648451635cec7d591162d9f"
+
+[[package]]
+name = "remove-metadata-and-weak-settings-migration"
+version = "0.1.0"
+dependencies = [
+ "migration-helpers",
+]
 
 [[package]]
 name = "repr_offset"

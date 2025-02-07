@@ -131,6 +131,12 @@ pub enum Error {
 
     #[snafu(display("Failed to create async runtime: {}", source))]
     CreateTokioRuntime { source: std::io::Error },
+
+    #[snafu(display(
+        "Error in deserializing response value to SettingsGenerator: {}",
+        source
+    ))]
+    DeserializeSettingsGenerator { source: serde_json::Error },
 }
 
 /// Result alias containing our Error type.

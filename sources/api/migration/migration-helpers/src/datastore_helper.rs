@@ -53,7 +53,7 @@ pub(crate) fn get_input_data<D: DataStore>(
     let mut metadata = HashMap::new();
     if let Committed::Live = committed {
         let raw_metadata = datastore
-            .get_metadata_prefix("", &None as &Option<&str>)
+            .get_metadata_prefix("", committed, &None as &Option<&str>)
             .context(error::GetMetadataSnafu)?;
         for (data_key, meta_map) in raw_metadata.into_iter() {
             // See notes above about storing key Strings and Values.
@@ -114,7 +114,7 @@ pub(crate) fn set_output_data<D: DataStore>(
                 })?;
             let value = serialize_scalar(&raw_value).context(error::SerializeSnafu)?;
             datastore
-                .set_metadata(&metadata_key, &data_key, value)
+                .set_metadata(&metadata_key, &data_key, value, committed)
                 .context(error::DataStoreWriteSnafu)?;
         }
     }
