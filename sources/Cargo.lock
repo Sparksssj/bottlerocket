@@ -437,6 +437,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "aws-remove-schnauzer-admin"
+version = "0.1.0"
+dependencies = [
+ "migration-helpers",
+]
+
+[[package]]
 name = "backtrace"
 version = "0.3.69"
 source = "registry+https://github.com/rust-lang/crates.io-index"
