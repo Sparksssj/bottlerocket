@@ -86,6 +86,7 @@ members = [
     "settings-migrations/v1.33.0/aws-remove-schnauzer-admin",
     "settings-migrations/v1.33.0/aws-remove-schnauzer-control",
     "settings-migrations/v1.33.0/public-remove-source-admin",
+    "settings-migrations/v1.33.0/public-remove-source-control",
 
     "settings-plugins/aws-dev",
     "settings-plugins/aws-ecs-1",
