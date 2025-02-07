@@ -1,3 +1,38 @@
+# v1.33.0 (2025-02-12)
+
+## Release Highlights
+* Remove aws-k8s-1.24 variants ([#4359])
+* Add support for NVIDIA Multi-Instance GPU (MIG) ([#4252])
+
+## OS Changes
+* Add support for NVIDIA Multi-Instance GPU (MIG) ([#4306])
+* Allow default host containers to be changed without a migration ([#4324])
+* Add default managed Bootstrap container ([#4349])
+* Correct migrations for public control containers. ([#4388])
+
+## Build Changes
+* Update bottlerocket-kernel-kit to 1.1.0 ([#4383], [#4386])
+* Update bottlerocket-core-kit to 6.0.0 ([#4387])
+
+### Twoliter
+* Update Twoliter to 0.7.2 ([#4384])
+
+## Orchestrator Changes
+### Kubernetes
+* Deprecate Kubernetes 1.24 AWS variants ([#4379])
+
+[#4252]: https://github.com/bottlerocket-os/bottlerocket/issues/4252
+[#4306]: https://github.com/bottlerocket-os/bottlerocket/pull/4306
+[#4324]: https://github.com/bottlerocket-os/bottlerocket/pull/4324
+[#4349]: https://github.com/bottlerocket-os/bottlerocket/pull/4349
+[#4359]: https://github.com/bottlerocket-os/bottlerocket/issues/4359
+[#4379]: https://github.com/bottlerocket-os/bottlerocket/pull/4379
+[#4383]: https://github.com/bottlerocket-os/bottlerocket/pull/4383
+[#4384]: https://github.com/bottlerocket-os/bottlerocket/pull/4384
+[#4386]: https://github.com/bottlerocket-os/bottlerocket/pull/4386
+[#4387]: https://github.com/bottlerocket-os/bottlerocket/pull/4387
+[#4388]: https://github.com/bottlerocket-os/bottlerocket/pull/4388
+
 # v1.32.0 (2025-01-24)
 
 ## Build Changes
