@@ -400,4 +400,5 @@ version = "1.33.0"
     "migrate_v1.33.0_aws-remove-schnauzer-control.lz4",
     "migrate_v1.33.0_public-remove-source-admin.lz4",
     "migrate_v1.33.0_public-remove-source-control.lz4",
+    "migrate_v1.33.0_remove-metadata-and-weak-settings-migration.lz4",
 ]
